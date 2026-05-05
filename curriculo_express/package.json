@@ -1,0 +1,34 @@
+{
+  "name": "curriculo_express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec babel-node src/server.js",
+    "start": "node src/server.js",
+    "seed": "babel-node src/seed.js"
+  },
+  "keywords": [
+    "express",
+    "postgresql",
+    "sequelize"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/node": "^7.29.0",
+    "@babel/preset-env": "^7.29.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "nodemon": "^3.1.12",
+    "pg": "^8.20.0",
+    "sequelize": "^6.37.8",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
