@@ -1,45 +1,37 @@
-const Pessoa = require("./Pessoa");
-const ExperienciaAcademica = require("./ExperienciaAcademica");
-const ExperienciaProfissional = require("./ExperienciaProfissional");
-const Projeto = require("./Projeto");
-const Tecnologia = require("./Tecnologia");
+require("dotenv").config();
+const Sequelize = require("sequelize");
 
-Pessoa.hasMany(ExperienciaAcademica, {
-  foreignKey: "pessoaId",
-  onDelete: "CASCADE",
-});
-ExperienciaAcademica.belongsTo(Pessoa, {
-  foreignKey: "pessoaId",
-});
+const getPessoaModel = require("./Pessoa");
+const getExperienciaAcademicaModel = require("./ExperienciaAcademica");
+const getExperienciaProfissionalModel = require("./ExperienciaProfissional");
+const getProjetoModel = require("./Projeto");
+const getTecnologiaModel = require("./Tecnologia");
 
-Pessoa.hasMany(ExperienciaProfissional, {
-  foreignKey: "pessoaId",
-  onDelete: "CASCADE",
-});
-ExperienciaProfissional.belongsTo(Pessoa, {
-  foreignKey: "pessoaId",
-});
-
-Pessoa.hasMany(Projeto, {
-  foreignKey: "pessoaId",
-  onDelete: "CASCADE",
-});
-Projeto.belongsTo(Pessoa, {
-  foreignKey: "pessoaId",
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: "postgres",
+  protocol: "postgres",
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
+  dialectModule: require("pg"),
+  logging: false,
 });
 
-Pessoa.hasMany(Tecnologia, {
-  foreignKey: "pessoaId",
-  onDelete: "CASCADE",
-});
-Tecnologia.belongsTo(Pessoa, {
-  foreignKey: "pessoaId",
-});
-
-module.exports = {
-  Pessoa,
-  ExperienciaAcademica,
-  ExperienciaProfissional,
-  Projeto,
-  Tecnologia,
+const models = {
+  Pessoa: getPessoaModel(sequelize, Sequelize),
+  ExperienciaAcademica: getExperienciaAcademicaModel(sequelize, Sequelize),
+  ExperienciaProfissional: getExperienciaProfissionalModel(sequelize, Sequelize),
+  Projeto: getProjetoModel(sequelize, Sequelize),
+  Tecnologia: getTecnologiaModel(sequelize, Sequelize),
 };
+
+Object.keys(models).forEach((key) => {
+  if ("associate" in models[key]) {
+    models[key].associate(models);
+  }
+});
+
+module.exports = { sequelize, ...models };

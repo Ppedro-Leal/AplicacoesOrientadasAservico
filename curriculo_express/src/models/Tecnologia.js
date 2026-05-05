@@ -1,15 +1,20 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
+module.exports = (sequelize, Sequelize) => {
+  const Tecnologia = sequelize.define("Tecnologia", {
+    nome: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    categoria: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+  });
 
-const Tecnologia = sequelize.define("Tecnologia", {
-  nome: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  categoria: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-});
+  Tecnologia.associate = (models) => {
+    Tecnologia.belongsTo(models.Pessoa, {
+      foreignKey: "pessoaId",
+    });
+  };
 
-module.exports = Tecnologia;
+  return Tecnologia;
+};

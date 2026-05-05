@@ -1,22 +1,27 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
+module.exports = (sequelize, Sequelize) => {
+  const ExperienciaProfissional = sequelize.define("ExperienciaProfissional", {
+    empresa: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    cargo: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    periodo: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    descricao: {
+      type: Sequelize.TEXT,
+    },
+  });
 
-const ExperienciaProfissional = sequelize.define("ExperienciaProfissional", {
-  empresa: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  cargo: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  periodo: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  descricao: {
-    type: DataTypes.TEXT,
-  },
-});
+  ExperienciaProfissional.associate = (models) => {
+    ExperienciaProfissional.belongsTo(models.Pessoa, {
+      foreignKey: "pessoaId",
+    });
+  };
 
-module.exports = ExperienciaProfissional;
+  return ExperienciaProfissional;
+};

@@ -1,9 +1,9 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
-const sequelize = require("./config/database");
 
-require("dotenv").config();
-require("./models");
+const { sequelize } = require("./models");
 
 const pessoaRoutes = require("./routes/pessoaRoutes");
 const academicaRoutes = require("./routes/academicaRoutes");
@@ -19,13 +19,6 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.json({
     mensagem: "API Currículo Express funcionando!",
-    rotas: {
-      pessoas: "/pessoas",
-      experienciasAcademicas: "/experiencias-academicas",
-      experienciasProfissionais: "/experiencias-profissionais",
-      projetos: "/projetos",
-      tecnologias: "/tecnologias",
-    },
   });
 });
 
@@ -37,15 +30,12 @@ app.use("/tecnologias", tecnologiaRoutes);
 
 const PORT = process.env.PORT || 3000;
 
-sequelize
-  .sync()
-  .then(() => {
+if (process.env.NODE_ENV !== "production") {
+  sequelize.sync().then(() => {
     app.listen(PORT, () => {
       console.log(`Servidor rodando na porta ${PORT}`);
     });
-  })
-  .catch((error) => {
-    console.error("Erro ao conectar com o banco:", error);
   });
+}
 
 module.exports = app;
