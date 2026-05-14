@@ -1,35 +1,12 @@
 import { Router } from "express";
+import { userController } from "../controllers";
 
 const router = Router();
 
-router.get("/", async (req, res) => {
-  const users = await req.context.models.User.findAll();
-  return res.send(users);
-});
-
-router.get("/:userId", async (req, res) => {
-  const user = await req.context.models.User.findByPk(req.params.userId);
-  return res.send(user);
-});
-
-router.post("/", async (req, res) => {
-  const { username, email } = req.body;
-  const user = await req.context.models.User.create({ username, email });
-  return res.send(user);
-});
-
-router.put("/:userId", async (req, res) => {
-  const { username, email } = req.body;
-  const user = await req.context.models.User.findByPk(req.params.userId);
-  await user.update({ username, email });
-  return res.send(user);
-});
-
-router.delete("/:userId", async (req, res) => {
-  await req.context.models.User.destroy({
-    where: { id: req.params.userId },
-  });
-  return res.send(true);
-});
+router.get("/", userController.getUsers);
+router.get("/:userId", userController.getUser);
+router.post("/", userController.createUser);
+router.put("/:userId", userController.updateUser);
+router.delete("/:userId", userController.deleteUser);
 
 export default router;
